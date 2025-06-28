@@ -1,5 +1,7 @@
+import { ThemedText } from '～/components/ThemedText'
 import { useEffect } from 'react'
 import { StyleSheet } from 'react-native'
+
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -7,8 +9,6 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated'
-
-import { ThemedText } from '@/components/ThemedText'
 
 const styles = StyleSheet.create({
   text: {
