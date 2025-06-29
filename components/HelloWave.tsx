@@ -1,4 +1,4 @@
-import { ThemedText } from '～/components/ThemedText'
+import { ThemedText } from '~/components/ThemedText'
 import { useEffect } from 'react'
 import { StyleSheet } from 'react-native'
 

@@ -1,10 +1,10 @@
-import { Collapsible } from '～/components/Collapsible'
-import { ExternalLink } from '～/components/ExternalLink'
+import { Collapsible } from '~/components/Collapsible'
+import { ExternalLink } from '~/components/ExternalLink'
 
-import ParallaxScrollView from '～/components/ParallaxScrollView'
-import { ThemedText } from '～/components/ThemedText'
-import { ThemedView } from '～/components/ThemedView'
-import { IconSymbol } from '～/components/ui/IconSymbol'
+import ParallaxScrollView from '~/components/ParallaxScrollView'
+import { ThemedText } from '~/components/ThemedText'
+import { ThemedView } from '~/components/ThemedView'
+import { IconSymbol } from '~/components/ui/IconSymbol'
 import { Image } from 'expo-image'
 import { Platform, StyleSheet } from 'react-native'
 
@@ -81,7 +81,7 @@ export default function TabTwoScreen() {
           suffixes to provide files for
           different screen densities
         </ThemedText>
-        <Image source={require('～/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
+        <Image source={require('~/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
         <ExternalLink href="https://reactnative.dev/docs/images">
           <ThemedText type="link">Learn more</ThemedText>
         </ExternalLink>
