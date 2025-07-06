@@ -1,39 +1,26 @@
+import { Provider } from '@ant-design/react-native'
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
 import {
-  QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
 import { useFonts } from 'expo-font'
 import { Stack } from 'expo-router'
-import { StatusBar } from 'expo-status-bar'
-import { patchFetch } from '~/api/patch'
-
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { useColorScheme } from '~/hooks/useColorScheme'
 
-import 'react-native-reanimated'
-import '../global.css'
-
-function fetchAuthIntercept(req: RequestInit) {
-  return req
-}
-
-async function fetchResponseIntercepet(res: Response) {
-  if (res.status !== 200) {
-    throw new Error('error request')
-  }
-  return res
-}
-
-const queryClient = new QueryClient({
-  defaultOptions: { queries: { retry: 2 } },
-})
-patchFetch([fetchAuthIntercept], fetchResponseIntercepet, 'https://dummyjson.com')
+import { useDevtools } from '~/setup/devtools.setup'
+import { queryClient } from '~/setup/query.setup'
+import '~/setup/fetch.setup'
+import '~/setup/style.setup'
 
 export default function RootLayout() {
   const colorScheme = useColorScheme()
   const [loaded] = useFonts({
+    antoutline: require('@ant-design/icons-react-native/fonts/antoutline.ttf'),
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   })
+
+  useDevtools()
 
   if (!loaded) {
     // Async font loading only occurs in development.
@@ -42,13 +29,17 @@ export default function RootLayout() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar style="auto" />
-      </ThemeProvider>
+      <Provider>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <SafeAreaProvider>
+            <Stack>
+              <Stack.Screen name="login" options={{ headerShown: false }} />
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+          </SafeAreaProvider>
+        </ThemeProvider>
+      </Provider>
     </QueryClientProvider>
   )
 }

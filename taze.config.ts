@@ -6,9 +6,9 @@ export default defineConfig({
     'webpack',
     'expo',
   ],
-  force: true,
-  write: true,
-  install: true,
+  force: false,
+  write: false,
+  install: false,
   ignorePaths: [
     '**/node_modules/**',
     '**/test/**',
