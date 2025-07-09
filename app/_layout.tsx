@@ -5,6 +5,7 @@ import {
 } from '@tanstack/react-query'
 import { useFonts } from 'expo-font'
 import { Stack } from 'expo-router'
+import { Text } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { useColorScheme } from '~/hooks/useColorScheme'
 
@@ -26,16 +27,25 @@ export default function RootLayout() {
     // Async font loading only occurs in development.
     return null
   }
-
   return (
     <QueryClientProvider client={queryClient}>
       <Provider>
         <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
           <SafeAreaProvider>
-            <Stack>
+            <Stack
+              initialRouteName="login"
+              screenOptions={{
+                headerStyle: {
+                  backgroundColor: '#f4511e',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
+              }}
+            >
+              <Stack.Screen name="index" options={{ title: 'Home' }} />
               <Stack.Screen name="login" options={{ headerShown: false }} />
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="+not-found" />
             </Stack>
           </SafeAreaProvider>
         </ThemeProvider>

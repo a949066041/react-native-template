@@ -1,3 +1,4 @@
+import type { ILoginParams } from '~/api/auth/auth.type'
 import {
   Button,
   Card,
@@ -7,24 +8,19 @@ import {
   Text,
   Toast,
 } from '@ant-design/react-native'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import React from 'react'
-import { Image, Pressable, ScrollView } from 'react-native'
+import { ScrollView } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { code, login } from '~/api/login'
-import useStore from '~/store/count.store'
+import { login } from '~/api'
+import { useStoreToken } from '~/store/auth'
 
-const BasicFormBase: React.FC = () => {
-  const [form] = Form.useForm<Parameters<typeof login>[0]>()
+const LoginScreen: React.FC = () => {
+  const [form] = Form.useForm<ILoginParams>()
   const insets = useSafeAreaInsets()
-  const { count, increase, decrease, reset } = useStore()
 
-  const { data, refetch } = useQuery({
-    queryKey: ['auth'],
-    queryFn: code,
-  })
-
-  const { mutate: loginMutate, isPending } = useMutation({
+  const { isPending, mutateAsync: loginMutate } = useMutation({
+    mutationKey: ['login', '1', form.getFieldsValue()],
     mutationFn: login,
     onSuccess: () => {
       Toast.show({
@@ -34,8 +30,11 @@ const BasicFormBase: React.FC = () => {
     },
   })
 
-  async function submitForm(values: Parameters<typeof login>[0]) {
-    await loginMutate(values)
+  const [currentToken, setToken] = useStoreToken()
+
+  async function submitForm(values: ILoginParams) {
+    const { token } = await loginMutate(values)
+    setToken(token)
   }
 
   return (
@@ -43,18 +42,19 @@ const BasicFormBase: React.FC = () => {
       <Card.Header title="用户登录" />
       <Card.Body>
         <ScrollView>
-          <Form<Parameters<typeof login>[0]>
+          <Form<ILoginParams>
             form={form}
             onFinish={submitForm}
           >
-            <Form.Item>
-              <Text>{ count }</Text>
-              <Button onPress={increase} loading={isPending} type="primary">加一</Button>
-              <Button onPress={decrease} loading={isPending} type="primary">减一</Button>
-              <Button onPress={reset} loading={isPending} type="primary">重置</Button>
+            <Form.Item label="用户名">
+              <Text>
+                123
+                { currentToken }
+              </Text>
             </Form.Item>
             <Form.Item
               name="username"
+              initialValue="admin"
               rules={[
                 {
                   required: true,
@@ -66,6 +66,7 @@ const BasicFormBase: React.FC = () => {
             </Form.Item>
             <Form.Item
               name="password"
+              initialValue="123456"
               rules={[
                 {
                   required: true,
@@ -74,29 +75,6 @@ const BasicFormBase: React.FC = () => {
               ]}
             >
               <Input type="password" placeholder="请输入密码" />
-            </Form.Item>
-            <Form.Item
-              name="code"
-              rules={[
-                {
-                  required: true,
-                  message: '请输入验证码',
-                },
-              ]}
-            >
-              <Input
-                placeholder="请输入验证码"
-                suffix={(
-                  <Pressable onPress={() => refetch()}>
-                    <Image
-                      source={{ uri: data?.img }}
-                      width={100}
-                      height={30}
-                      resizeMode="contain"
-                    />
-                  </Pressable>
-                )}
-              />
             </Form.Item>
             <Form.Item>
               <Flex>
@@ -115,4 +93,4 @@ const BasicFormBase: React.FC = () => {
   )
 }
 
-export default BasicFormBase
+export default LoginScreen

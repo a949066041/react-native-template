@@ -12,22 +12,14 @@ export function useDevtools() {
     deviceId: Platform?.OS || 'web', // Use a PERSISTENT identifier (see note below)
     isDevice: ExpoDevice.isDevice, // Automatically detects real devices vs emulators
     extraDeviceInfo: {
-      // Optional additional info about your device
       appVersion: '1.0.0',
-      // Add any relevant platform info
     },
-    enableLogs: false,
+    enableLogs: true,
     envVariables: {
       NODE_ENV: process.env.NODE_ENV,
-      // Add any private environment variables you want to monitor
-      // Public environment variables are automatically loaded
     },
     // Storage monitoring with CRUD operations
     secureStorageKeys: [
-      'userToken',
-      'refreshToken',
-      'biometricKey',
-      'deviceId',
-    ], // SecureStore keys to monitor
+    ],
   })
 }
